@@ -12,17 +12,26 @@ import java.util.concurrent.Future;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/*
+mockito based test suite for producer
+ */
 public class ProducerServiceTest {
 
     private KafkaProducer<String, String> kafkaProducerMock;
     private ProducerService producerService;
 
+    /**
+     * setup the mock objects
+     */
     @BeforeEach
     public void setUp() {
         kafkaProducerMock = mock(KafkaProducer.class);
         producerService = new ProducerService(kafkaProducerMock);
     }
 
+    /**
+     * test message sending ability
+     */
     @Test
     public void testSendMessage() {
         // Arrange
@@ -47,12 +56,16 @@ public class ProducerServiceTest {
         assertEquals(value, capturedRecord.value());
     }
 
-    //@Test
+    /**
+     * test failure scene where message sending fails
+     */
+    @Test
     public void testSendMessageException() {
         String topic = "test-topic";
         String key = "test-key";
         String value = "test-value";
 
+        // intentionally cause a message send failure and throw exception
         when(kafkaProducerMock.send(any(ProducerRecord.class))).thenThrow(new RuntimeException("Kafka send failed"));
 
         try {
@@ -62,6 +75,9 @@ public class ProducerServiceTest {
         }
     }
 
+    /**
+     * test producer closing ability
+     */
     @Test
     public void testClose() {
         producerService.close();
