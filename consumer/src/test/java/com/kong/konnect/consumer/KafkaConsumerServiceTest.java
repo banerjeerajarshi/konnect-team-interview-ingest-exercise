@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * mockito based unit tests
+ */
 class KafkaConsumerServiceTest {
 
     @Test
