@@ -25,7 +25,7 @@ public class ProducerMain {
             Properties props = new Properties();
             try (InputStream input = ProducerMain.class.getClassLoader().getResourceAsStream(activeProfile)) {
                 if (input == null) {
-                    logger.error("Sorry, unable to find application-dev.properties");
+                    logger.error("Sorry, unable to find {}", propertiesFile);
                     return;
                 }
                 props.load(input);
