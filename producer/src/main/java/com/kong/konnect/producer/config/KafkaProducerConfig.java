@@ -21,7 +21,7 @@ public class KafkaProducerConfig {
 
         try (InputStream input = ProducerConfig.class.getClassLoader().getResourceAsStream(propertiesFile)) {
             if (input == null) {
-                logger.error("Sorry, unable to find application-dev.properties");
+                logger.error("Sorry, unable to find {}", propertiesFile);
                 return null;
             }
 

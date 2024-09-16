@@ -15,6 +15,7 @@ public class ProducerMain {
 
     private static final Logger logger = LoggerFactory.getLogger(ProducerMain.class);
 
+
     public static void main(String[] args) {
         IProducer producerService = new ProducerService();
         String activeProfile = System.getProperty("env", "dev");
@@ -23,25 +24,32 @@ public class ProducerMain {
         try {
 
             Properties props = new Properties();
-            try (InputStream input = ProducerMain.class.getClassLoader().getResourceAsStream(activeProfile)) {
+
+            try (InputStream input = ProducerMain.class.getClassLoader().getResourceAsStream(propertiesFile)) {
                 if (input == null) {
                     logger.error("Sorry, unable to find {}", propertiesFile);
                     return;
                 }
                 props.load(input);
             }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
 
             String topic = props.getProperty("kafka.topic");
             String jsonlFilePath = props.getProperty("kafka.jsonl.file");
-            try (InputStream fileInputStream = ProducerMain.class.getClassLoader().getResourceAsStream(jsonlFilePath);
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream))) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String key = "cdc-key";
-                    System.out.println(line);
-                    producerService.sendMessage(topic, key, line);
-                    System.out.println("sent message "+ line);
+            try (InputStream fileInputStream = ProducerMain.class.getClassLoader().getResourceAsStream(jsonlFilePath)) {
+                if (fileInputStream == null) {
+                    logger.error("Unable to find jsonl file to publish: {}", jsonlFilePath);
+                    return;
+                }
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String key = "cdc-key";
+                        producerService.sendMessage(topic, key, line);
+                    }
                 }
             }
 
@@ -50,6 +58,7 @@ public class ProducerMain {
             e.printStackTrace();
         }
     }
+
 }
 
 
