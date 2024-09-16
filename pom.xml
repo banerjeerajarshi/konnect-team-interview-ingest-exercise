@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/POM/4.0.0">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.kong.konnect</groupId>
+    <artifactId>konnect-team-interview-ingest-exercise</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>producer</module>
+        <module>consumer</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>build-producer</id>
+            <properties>
+                <build.module>producer</build.module>
+            </properties>
+        </profile>
+        <profile>
+            <id>build-consumer</id>
+            <properties>
+                <build.module>consumer</build.module>
+            </properties>
+        </profile>
+    </profiles>
+</project>
