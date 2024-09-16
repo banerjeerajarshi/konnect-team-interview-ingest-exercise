@@ -10,7 +10,7 @@ public class OpenSearchClientConfig {
 
     /**
      * returns a rest client handle for opensearch
-     * @return
+     * @return an opensearch rest client handle
      */
     public static RestClient getClient() {
         return RestClient.builder(

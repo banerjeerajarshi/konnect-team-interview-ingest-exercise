@@ -12,7 +12,7 @@ public class KafkaConsumerConfig {
 
     /**
      * returns the kafka consumer properties
-     * @return
+     * @return the properties file of the kafka consumer config
      */
     public static Properties getConsumerConfig() {
         Properties props = new Properties();

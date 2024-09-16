@@ -27,7 +27,7 @@ public class ConfigLoader {
     /**
      * returns the property string
      * @param key
-     * @return
+     * @return the property string
      */
     public static String getProperty(String key) {
         return properties.getProperty(key);

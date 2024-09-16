@@ -65,7 +65,7 @@ public class KafkaConsumerService implements IConsumer {
 
     /**
      * dump a record from kafka to opensearch
-     * @param record
+     * @param record a record fetched from kafka
      */
     private void processRecord(ConsumerRecord<String, String> record) {
         String jsonData = record.value();
