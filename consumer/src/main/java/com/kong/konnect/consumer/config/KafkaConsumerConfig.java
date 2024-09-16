@@ -5,8 +5,15 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Properties;
 
+/**
+ * configures the kafka consumer configuration properties
+ */
 public class KafkaConsumerConfig {
 
+    /**
+     * returns the kafka consumer properties
+     * @return
+     */
     public static Properties getConsumerConfig() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, ConfigLoader.getProperty("kafka.bootstrap.servers"));

@@ -18,16 +18,22 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ConsumerService implements IConsumer {
+/**
+ * kafka consumer service
+ */
+public class KafkaConsumerService implements IConsumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsumerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerService.class);
     private final KafkaConsumer<String, String> kafkaConsumer;
     private final RestClient openSearchClient;
     private final ExecutorService executorService;
     private final String indexName;
     private boolean running = true;
 
-    public ConsumerService() {
+    /**
+     * default constructor sets up variables
+     */
+    public KafkaConsumerService() {
         Properties consumerProps = KafkaConsumerConfig.getConsumerConfig();
         this.kafkaConsumer = new KafkaConsumer<>(consumerProps);
         this.kafkaConsumer.subscribe(List.of(ConfigLoader.getProperty("kafka.topic")));
@@ -35,28 +41,42 @@ public class ConsumerService implements IConsumer {
 
         this.openSearchClient = OpenSearchClientConfig.getClient();
 
+        // figure out the number of cores on the machine so that consumer can work most efficiently
         int cores = Runtime.getRuntime().availableProcessors();
+        // multithreaded consumer uses a threadpool to use all cpu cores to process messages super fast
         this.executorService = Executors.newFixedThreadPool(cores);
     }
 
+    /**
+     * start consuming from kafka
+     */
     @Override
     public void startConsuming() {
         logger.info("Starting consumer with {} threads.", Runtime.getRuntime().availableProcessors());
-        while (running) {
+        while (running) { // keep the consumer running
+            // poll records from kafka with 1000 millis max wait time
             ConsumerRecords<String, String> records = kafkaConsumer.poll(java.time.Duration.ofMillis(1000));
             for (ConsumerRecord<String, String> record : records) {
+                // submit the polled record to the threadpool to dump to opensearch
                 executorService.submit(() -> processRecord(record));
             }
         }
     }
 
+    /**
+     * dump a record from kafka to opensearch
+     * @param record
+     */
     private void processRecord(ConsumerRecord<String, String> record) {
         String jsonData = record.value();
+        // record key may help in aggregation or other activity later. right now not much useful.
         logger.info("Processing record with key: {}, value: {}", record.key(), jsonData);
 
         try {
+            // prep the opensearch rest client to send the request
             Request request = new Request("POST", "/" + this.indexName + "/_doc");
             request.setJsonEntity(jsonData);
+            // persist the data to opensearch
             Response response = openSearchClient.performRequest(request);
             logger.info("Data persisted to OpenSearch. Status: {}", response.getStatusLine().getStatusCode());
         } catch (IOException e) {
@@ -64,6 +84,9 @@ public class ConsumerService implements IConsumer {
         }
     }
 
+    /**
+     * stop the consumer
+     */
     @Override
     public void stopConsuming() {
         logger.info("Stopping consumer...");

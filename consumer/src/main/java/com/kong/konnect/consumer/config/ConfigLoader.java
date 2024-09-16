@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * generic properties configuration loader class
+ */
 public class ConfigLoader {
 
     private static final Properties properties = new Properties();
@@ -21,6 +24,11 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * returns the property string
+     * @param key
+     * @return
+     */
     public static String getProperty(String key) {
         return properties.getProperty(key);
     }

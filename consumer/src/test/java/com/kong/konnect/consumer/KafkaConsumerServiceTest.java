@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-class ConsumerServiceTest {
+class KafkaConsumerServiceTest {
 
     @Test
     void testStartConsuming() {
