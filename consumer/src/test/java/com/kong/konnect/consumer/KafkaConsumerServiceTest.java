@@ -10,6 +10,9 @@ import static org.mockito.Mockito.*;
  */
 class KafkaConsumerServiceTest {
 
+    /**
+     * test startconsuming method
+     */
     @Test
     void testStartConsuming() {
         IConsumer consumer = mock(IConsumer.class);
@@ -17,6 +20,9 @@ class KafkaConsumerServiceTest {
         verify(consumer).startConsuming();
     }
 
+    /**
+     * test stopconsuming method
+     */
     @Test
     void testStopConsuming() {
         IConsumer consumer = mock(IConsumer.class);
