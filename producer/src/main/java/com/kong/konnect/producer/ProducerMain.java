@@ -37,7 +37,7 @@ public class ProducerMain {
                 props.load(input);
             }
             catch (Exception e){
-                e.printStackTrace();
+                logger.error("error occurred while processing properties file ", e);
             }
 
 
@@ -65,7 +65,7 @@ public class ProducerMain {
             // close the producer once the file has been read and its contents dispatched
             producerService.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error occurred while producing records to kafka ", e);
         }
     }
 
